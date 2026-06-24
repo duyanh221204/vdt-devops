@@ -1,0 +1,28 @@
+# kubectl create namespace argocd
+# kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --server-side
+# nano argoCD.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 32001
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 32002
+  selector:
+    app.kubernetes.io/name: argocd-server
+
+# kubectl apply -f argoCD.yaml
+# kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo

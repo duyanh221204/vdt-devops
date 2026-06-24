@@ -1,0 +1,33 @@
+# sudo mkdir -p /data/jenkins_home
+# sudo chown -R 1000:1000 /data/jenkins_home
+# kubectl create namespace jenkins
+# nano jenkins-pvc.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/jenkins_home"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc
+  namespace: jenkins
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+# kubectl apply -f jenkins-pvc.yaml
