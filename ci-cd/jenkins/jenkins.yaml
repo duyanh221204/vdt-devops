@@ -23,9 +23,14 @@ spec:
             - name: JAVA_OPTS
               value: "-Xms256m -Xmx512m" # Giới hạn tài nguyên cho Jenkins
           volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
             - name: jenkins-data
               mountPath: /var/jenkins_home
       volumes: # Mount vào ổ cứng của Worker Node
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
         - name: jenkins-data
           persistentVolumeClaim:
             claimName: jenkins-pvc
