@@ -1,0 +1,437 @@
+Started by GitHub push by duyanh221204
+Checking out git https://github.com/duyanh221204/vdt-backend.git into /var/jenkins_home/workspace/vdt-backend-pipeline@script/3e5e492800f9a991d8eeb4c3b1f69d3e88e5f90ed90a27908c3b53a00aacc8ff to read Jenkinsfile
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/vdt-backend-pipeline@script/3e5e492800f9a991d8eeb4c3b1f69d3e88e5f90ed90a27908c3b53a00aacc8ff/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-backend.git # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-backend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-backend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 (refs/tags/v1.2.0)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 # timeout=10
+Commit message: "Update main.py"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/vdt-backend-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/duyanh221204/vdt-backend.git
+ > git init /var/jenkins_home/workspace/vdt-backend-pipeline # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-backend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-backend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-backend.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 (refs/tags/v1.2.0)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 # timeout=10
+Commit message: "Update main.py"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Source Code)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/vdt-backend-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-backend.git # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-backend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-backend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 (refs/tags/v1.2.0)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 2a7630d5f5b7ad1f4126d8fc68415d05aa265803 # timeout=10
+Commit message: "Update main.py"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Check Git Tag)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Kiểm tra tag hiện tại: refs/tags/v1.2.0
+[Pipeline] echo
+Tag mới nhận được: v1.2.0
+[Pipeline] echo
+Định dạng Tag hợp lệ: v1.2.0
+[Pipeline] withCredentials
+Masking supported pattern matches of $GIT_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ rm -rf config-repo
++ git clone https://duyanh221204:****@github.com/duyanh221204/vdt-backend-config.git config-repo
+Cloning into 'config-repo'...
+[Pipeline] readFile
+[Pipeline] echo
+Tag hiện tại đang chạy trên hệ thống: v1.1.2
+[Pipeline] sh
++ [ v1.2.0 = v1.1.2 ]
++ printf v1.2.0
+v1.1.2
++ head -n1
++ sort -V
++ lowest=v1.1.2
++ [ v1.1.2 = v1.2.0 ]
+[Pipeline] echo
+Tag mới (v1.2.0) lớn hơn tag hiện tại (v1.1.2), tiếp tục pipeline
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build and Push Docker Image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ echo Đăng nhập hệ thống Docker Hub
+Đăng nhập hệ thống Docker Hub
++ echo ****
++ /var/jenkins_home/docker login -u nguyenduyanh221204 --password-stdin
+WARNING! Your password will be stored unencrypted in /var/jenkins_home/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credential-stores
+
+Login Succeeded
++ echo Tiến hành build Image với tag: v1.2.0
+Tiến hành build Image với tag: v1.2.0
++ /var/jenkins_home/docker build -t nguyenduyanh221204/vdt-backend:v1.2.0 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon    128kB
+Step 1/11 : FROM python:3.11.9-slim AS builder
+ ---> 8fb099199b9f
+Step 2/11 : WORKDIR /app
+ ---> Using cache
+ ---> 2b064b566598
+Step 3/11 : COPY requirements.txt .
+ ---> Using cache
+ ---> 6604f637852c
+Step 4/11 : RUN pip install --upgrade pip && pip install --prefix=/install --no-cache-dir -r requirements.txt
+ ---> Using cache
+ ---> 80028c424e86
+Step 5/11 : FROM python:3.11.9-slim
+ ---> 8fb099199b9f
+Step 6/11 : WORKDIR /app
+ ---> Using cache
+ ---> 2b064b566598
+Step 7/11 : COPY --from=builder /install /usr/local
+ ---> Using cache
+ ---> f2c8fb2c58e7
+Step 8/11 : COPY . .
+ ---> bae40fdc61bc
+Step 9/11 : ENV PYTHONDONTWRITEBYTECODE=1
+ ---> Running in 9d97e26aad2f
+ ---> Removed intermediate container 9d97e26aad2f
+ ---> f353ff3a2654
+Step 10/11 : ENV PYTHONUNBUFFERED=1
+ ---> Running in 49a46fffc040
+ ---> Removed intermediate container 49a46fffc040
+ ---> c3de3d93e6f7
+Step 11/11 : CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ ---> Running in 64c25ab89512
+ ---> Removed intermediate container 64c25ab89512
+ ---> 8934bc53bb2c
+Successfully built 8934bc53bb2c
+Successfully tagged nguyenduyanh221204/vdt-backend:v1.2.0
++ echo Tiến hành đẩy Image lên Docker Hub
+Tiến hành đẩy Image lên Docker Hub
++ /var/jenkins_home/docker push nguyenduyanh221204/vdt-backend:v1.2.0
+The push refers to repository [docker.io/nguyenduyanh221204/vdt-backend]
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+95b5b248c442: Layer already exists
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Waiting
+a2318d6c47ec: Waiting
+334af29dc78e: Layer already exists
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+d534b3df1e9e: Layer already exists
+a2318d6c47ec: Waiting
+85b84f68eaf0: Waiting
+a2318d6c47ec: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+a2318d6c47ec: Waiting
+98d167576f7c: Waiting
+a2df83f12080: Waiting
+a2318d6c47ec: Waiting
+85b84f68eaf0: Waiting
+e1ea173316cd: Waiting
+98d167576f7c: Layer already exists
+a2df83f12080: Waiting
+a2318d6c47ec: Layer already exists
+85b84f68eaf0: Layer already exists
+e1ea173316cd: Layer already exists
+a2df83f12080: Pushed
+v1.2.0: digest: sha256:8934bc53bb2c042ae07dda6a067813c4f9b408a63d0168accebbea27319af5e1 size: 2061
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Update Config Repo)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $GIT_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ cd config-repo
++ echo Cấu hình thông tin user Git
+Cấu hình thông tin user Git
++ git config user.email devops@vdt2026.com
++ git config user.name Jenkins CI
++ echo Cập nhật dữ liệu mới nhất từ GitHub để tránh xung đột dữ liệu
+Cập nhật dữ liệu mới nhất từ GitHub để tránh xung đột dữ liệu
++ git pull origin main --rebase
+From https://github.com/duyanh221204/vdt-backend-config
+ * branch            main       -> FETCH_HEAD
+Already up to date.
++ echo Chỉnh sửa version tag trong tệp values.yaml
+Chỉnh sửa version tag trong tệp values.yaml
++ sed -i s/tag: .*/tag: v1.2.0/g values.yaml
++ git diff --quiet values.yaml
++ echo Phát hiện tag mới, commit và push thay đổi lên GitHub
+Phát hiện tag mới, commit và push thay đổi lên GitHub
++ git add values.yaml
++ git commit -m Update image tag to v1.2.0 via Jenkins Pipeline
+[main 81b233c] Update image tag to v1.2.0 via Jenkins Pipeline
+ 1 file changed, 1 insertion(+), 1 deletion(-)
++ git push https://duyanh221204:****@github.com/duyanh221204/vdt-backend-config.git main
+To https://github.com/duyanh221204/vdt-backend-config.git
+   fbe2a24..81b233c  main -> main
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] cleanWs
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+[Pipeline] echo
+Pipeline thành công
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

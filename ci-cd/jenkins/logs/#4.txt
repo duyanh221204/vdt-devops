@@ -1,0 +1,609 @@
+Started by user Duy Anh Nguyen
+Checking out git https://github.com/duyanh221204/vdt-frontend.git into /var/jenkins_home/workspace/vdt-frontend-pipeline@script/3445b1bd41006309be77df938bcf6ec7a5b9ad37a7e2b5488129f6ef75ec8d54 to read Jenkinsfile
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/vdt-frontend-pipeline@script/3445b1bd41006309be77df938bcf6ec7a5b9ad37a7e2b5488129f6ef75ec8d54/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-frontend.git # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-frontend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-frontend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision ccba38b8b2e95b46e467822360fc285b77bd0b0c (refs/tags/v1.0.1)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f ccba38b8b2e95b46e467822360fc285b77bd0b0c # timeout=10
+Commit message: "Update: Remove role badge"
+ > git rev-list --no-walk ccba38b8b2e95b46e467822360fc285b77bd0b0c # timeout=10
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/vdt-frontend-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/duyanh221204/vdt-frontend.git
+ > git init /var/jenkins_home/workspace/vdt-frontend-pipeline # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-frontend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-frontend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-frontend.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision ccba38b8b2e95b46e467822360fc285b77bd0b0c (refs/tags/v1.0.1)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f ccba38b8b2e95b46e467822360fc285b77bd0b0c # timeout=10
+Commit message: "Update: Remove role badge"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Source Code)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/vdt-frontend-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/duyanh221204/vdt-frontend.git # timeout=10
+Fetching upstream changes from https://github.com/duyanh221204/vdt-frontend.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/duyanh221204/vdt-frontend.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/main
+Seen 1 remote branch
+ > git show-ref --tags -d # timeout=10
+Checking out Revision ccba38b8b2e95b46e467822360fc285b77bd0b0c (refs/tags/v1.0.1)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f ccba38b8b2e95b46e467822360fc285b77bd0b0c # timeout=10
+Commit message: "Update: Remove role badge"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Check Git Tag)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Kiểm tra tag hiện tại: refs/tags/v1.0.1
+[Pipeline] echo
+Tag mới nhận được: v1.0.1
+[Pipeline] echo
+Định dạng Tag hợp lệ: v1.0.1
+[Pipeline] withCredentials
+Masking supported pattern matches of $GIT_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ rm -rf config-repo
++ git clone https://duyanh221204:****@github.com/duyanh221204/vdt-frontend-config.git config-repo
+Cloning into 'config-repo'...
+[Pipeline] readFile
+[Pipeline] echo
+Tag hiện tại đang chạy trên hệ thống: v1.0.0
+[Pipeline] sh
++ [ v1.0.1 = v1.0.0 ]
++ sort -V
++ printf v1.0.1
+v1.0.0
++ head -n1
++ lowest=v1.0.0
++ [ v1.0.0 = v1.0.1 ]
+[Pipeline] echo
+Tag mới (v1.0.1) lớn hơn tag hiện tại (v1.0.0), tiếp tục pipeline
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build and Push Docker Image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ echo Đăng nhập hệ thống Docker Hub
+Đăng nhập hệ thống Docker Hub
++ echo ****
++ /var/jenkins_home/docker login -u nguyenduyanh221204 --password-stdin
+WARNING! Your password will be stored unencrypted in /var/jenkins_home/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credential-stores
+
+Login Succeeded
++ echo Tiến hành build Image với tag: v1.0.1
+Tiến hành build Image với tag: v1.0.1
++ /var/jenkins_home/docker build -t nguyenduyanh221204/vdt-frontend:v1.0.1 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  242.2kB
+Step 1/13 : FROM node:20-alpine AS build
+20-alpine: Pulling from library/node
+fff4e2c1b189: Pulling fs layer
+6a0ac1617861: Pulling fs layer
+4feea04c1543: Pulling fs layer
+b2cbbfe903b0: Pulling fs layer
+6a0ac1617861: Download complete
+6a0ac1617861: Pull complete
+fff4e2c1b189: Download complete
+b2cbbfe903b0: Download complete
+14f8540414db: Download complete
+0f92261bcd1c: Download complete
+4feea04c1543: Download complete
+b2cbbfe903b0: Pull complete
+4feea04c1543: Pull complete
+fff4e2c1b189: Pull complete
+Digest: sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+Status: Downloaded newer image for node:20-alpine
+ ---> fb4cd12c85ee
+Step 2/13 : WORKDIR /app
+ ---> Running in 79e654ffaaaa
+ ---> Removed intermediate container 79e654ffaaaa
+ ---> 16e9ea325181
+Step 3/13 : COPY package*.json ./
+ ---> cf37cfdd9da7
+Step 4/13 : RUN npm ci
+ ---> Running in 51b4907f66d6
+
+added 176 packages, and audited 177 packages in 5s
+
+51 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+[91mnpm notice
+npm notice New major version of npm available! 10.8.2 -> 11.17.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+npm notice To update run: npm install -g npm@11.17.0
+npm notice
+[0m ---> Removed intermediate container 51b4907f66d6
+ ---> cb4361dfed32
+Step 5/13 : COPY . .
+ ---> 8854ae007005
+Step 6/13 : ENV VITE_BASE_API_URL=/api
+ ---> Running in 1c1fb2fe6563
+ ---> Removed intermediate container 1c1fb2fe6563
+ ---> e20f0d56c217
+Step 7/13 : RUN npm run build
+ ---> Running in 520e989766a3
+
+> vdt-frontend@0.0.0 build
+> vite build
+
+vite v8.0.16 building client environment for production...
+[2Ktransforming...✓ 91 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.38 kB │ gzip:  0.26 kB
+dist/assets/index-Br4qincr.css   13.22 kB │ gzip:  3.08 kB
+dist/assets/index-C3QbZLvj.js   157.31 kB │ gzip: 58.74 kB
+
+✓ built in 468ms
+ ---> Removed intermediate container 520e989766a3
+ ---> 5a01be0aba06
+Step 8/13 : FROM nginx:alpine
+alpine: Pulling from library/nginx
+c75b9c33e8b0: Pulling fs layer
+967885d218c5: Pulling fs layer
+e6f31ffc071e: Pulling fs layer
+c16defe09b2f: Pulling fs layer
+5b429a43b8df: Pulling fs layer
+ce42635eeddd: Pulling fs layer
+01bf363d61e6: Pulling fs layer
+ab1fd9049751: Pulling fs layer
+c75b9c33e8b0: Download complete
+967885d218c5: Download complete
+e6f31ffc071e: Download complete
+c16defe09b2f: Download complete
+5b429a43b8df: Download complete
+ce42635eeddd: Download complete
+01bf363d61e6: Download complete
+ab1fd9049751: Download complete
+e6f31ffc071e: Pull complete
+967885d218c5: Pull complete
+c16defe09b2f: Pull complete
+5b429a43b8df: Pull complete
+ce42635eeddd: Pull complete
+01bf363d61e6: Pull complete
+ab1fd9049751: Pull complete
+c75b9c33e8b0: Pull complete
+84fd3fc5237f: Download complete
+9e6bf8ac91af: Download complete
+Digest: sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+Status: Downloaded newer image for nginx:alpine
+ ---> 54f2a904c251
+Step 9/13 : RUN rm -rf /usr/share/nginx/html/*
+ ---> Running in 9fe725f55963
+ ---> Removed intermediate container 9fe725f55963
+ ---> 7105dd91752c
+Step 10/13 : COPY --from=build /app/dist /usr/share/nginx/html
+ ---> c3fa0d3b9ede
+Step 11/13 : COPY nginx.conf /etc/nginx/conf.d/default.conf
+ ---> 0083991fd01a
+Step 12/13 : EXPOSE 80
+ ---> Running in f85f0dac5846
+ ---> Removed intermediate container f85f0dac5846
+ ---> 060c31090bb5
+Step 13/13 : CMD ["nginx", "-g", "daemon off;"]
+ ---> Running in 44911c069e9c
+ ---> Removed intermediate container 44911c069e9c
+ ---> 3959d109366f
+Successfully built 3959d109366f
+Successfully tagged nguyenduyanh221204/vdt-frontend:v1.0.1
++ echo Tiến hành đẩy Image lên Docker Hub
+Tiến hành đẩy Image lên Docker Hub
++ /var/jenkins_home/docker push nguyenduyanh221204/vdt-frontend:v1.0.1
+The push refers to repository [docker.io/nguyenduyanh221204/vdt-frontend]
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+5b429a43b8df: Layer already exists
+e6f31ffc071e: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Waiting
+806ca5962c14: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+ab1fd9049751: Layer already exists
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+c75b9c33e8b0: Layer already exists
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+053a7f51b918: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Waiting
+c16defe09b2f: Waiting
+ce42635eeddd: Waiting
+01bf363d61e6: Waiting
+053a7f51b918: Waiting
+967885d218c5: Waiting
+e1cb2e4ca844: Waiting
+967885d218c5: Layer already exists
+e1cb2e4ca844: Waiting
+806ca5962c14: Waiting
+e6f31ffc071e: Layer already exists
+c16defe09b2f: Layer already exists
+ce42635eeddd: Layer already exists
+01bf363d61e6: Layer already exists
+053a7f51b918: Waiting
+806ca5962c14: Waiting
+053a7f51b918: Waiting
+053a7f51b918: Waiting
+806ca5962c14: Waiting
+053a7f51b918: Waiting
+806ca5962c14: Waiting
+053a7f51b918: Waiting
+806ca5962c14: Waiting
+806ca5962c14: Waiting
+053a7f51b918: Waiting
+e1cb2e4ca844: Pushed
+053a7f51b918: Pushed
+806ca5962c14: Pushed
+v1.0.1: digest: sha256:3959d109366fd7d2fe6d30cf2ad295e5c62f55e367f018024f99232a5b70e749 size: 2697
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Update Config Repo)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $GIT_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ cd config-repo
++ echo Cấu hình thông tin user Git
+Cấu hình thông tin user Git
++ git config user.email devops@vdt2026.com
++ git config user.name Jenkins CI
++ echo Cập nhật dữ liệu mới nhất từ GitHub để tránh xung đột dữ liệu
+Cập nhật dữ liệu mới nhất từ GitHub để tránh xung đột dữ liệu
++ git pull origin main --rebase
+From https://github.com/duyanh221204/vdt-frontend-config
+ * branch            main       -> FETCH_HEAD
+Already up to date.
++ echo Chỉnh sửa version tag trong tệp values.yaml
+Chỉnh sửa version tag trong tệp values.yaml
++ sed -i s/tag: .*/tag: v1.0.1/g values.yaml
++ git diff --quiet values.yaml
++ echo Phát hiện tag mới, commit và push thay đổi lên GitHub
+Phát hiện tag mới, commit và push thay đổi lên GitHub
++ git add values.yaml
++ git commit -m Update image tag to v1.0.1 via Jenkins Pipeline
+[main cf33d43] Update image tag to v1.0.1 via Jenkins Pipeline
+ 1 file changed, 1 insertion(+), 1 deletion(-)
++ git push https://duyanh221204:****@github.com/duyanh221204/vdt-frontend-config.git main
+To https://github.com/duyanh221204/vdt-frontend-config.git
+   9a2444c..cf33d43  main -> main
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] cleanWs
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+[Pipeline] echo
+Pipeline thành công
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
