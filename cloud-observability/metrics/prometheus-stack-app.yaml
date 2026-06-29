@@ -26,8 +26,8 @@ spec:
 
         prometheus:
           prometheusSpec:
-            # Cho phép Prometheus nhận diện ServiceMonitor trên toàn cụm
             serviceMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorNamespaceSelectorNilUsesHelmValues: false
             retention: 2d
             scrapeInterval: 30s
             evaluationInterval: 30s
@@ -38,6 +38,9 @@ spec:
               limits:
                 memory: 512Mi
                 cpu: 500m
+          service:
+            type: NodePort
+            nodePort: 32200
 
         alertmanager:
           enabled: true
