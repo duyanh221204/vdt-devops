@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.appName }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.backend.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.backend.appName }}
+    spec:
+      containers:
+        - name: backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+          ports:
+            - containerPort: {{ .Values.backend.containerPort }}
+          env:
+            - name: DB_HOST
+              value: {{ quote .Values.database.host }}
+            - name: DB_PORT
+              value: {{ quote .Values.database.port }}
+            - name: DB_USERNAME
+              value: {{ quote .Values.database.username }}
+            - name: DB_PASSWORD
+              value: {{ quote .Values.database.password }}
+            - name: DB_NAME
+              value: {{ quote .Values.database.name }}
+            - name: SECRET_KEY
+              value: {{ quote .Values.backend.auth.secretKey }}
+            - name: ALGORITHM
+              value: {{ quote .Values.backend.auth.algorithm }}
+            - name: ACCESS_TOKEN_EXPIRED_MINUTES
+              value: {{ quote .Values.backend.auth.accessTokenExpiredMinutes }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ quote .Values.backend.otel.otelExporterOtlpEndpoint }}
+          resources:
+            limits:
+              memory: {{ .Values.backend.resources.limits.memory }}
+              cpu: {{ .Values.backend.resources.limits.cpu }}

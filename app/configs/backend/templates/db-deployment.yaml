@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.database.appName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.database.appName }}
+  replicas: {{ .Values.database.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.database.appName }}
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.database.image }}
+          ports:
+            - containerPort: {{ .Values.database.containerPort }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ quote .Values.database.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ quote .Values.database.password }}
+            - name: POSTGRES_DB
+              value: {{ quote .Values.database.name }}
+          resources:
+            limits:
+              memory: {{ .Values.database.resources.limits.memory }}
+              cpu: {{ .Values.database.resources.limits.cpu }}
+          volumeMounts:
+            - name: init-script-volume
+              mountPath: /docker-entrypoint-initdb.d/
+            - name: postgres-data-volume
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: init-script-volume
+          configMap:
+            name: {{ .Values.database.configMapName }}
+        - name: postgres-data-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.database.persistence.pvcName }}

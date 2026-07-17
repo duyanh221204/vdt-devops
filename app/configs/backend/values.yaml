@@ -1,0 +1,56 @@
+database:
+  appName: vdt-database
+  image: postgres:15-alpine
+  username: postgres
+  password: duyanh221204
+  name: vdt
+  host: vdt-database-svc
+  port: 5432
+  containerPort: 5432
+  replicas: 1
+  configMapName: vdt-db-init-script
+  persistence:
+    pvName: vdt-postgres-pv
+    pvcName: vdt-postgres-pvc
+    storageClassName: manual
+    storage: 2Gi
+    hostPath: /data/postgres_home
+  service:
+    name: vdt-database-svc
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: 250m
+
+backend:
+  appName: vdt-backend
+  monitor:
+    name: vdt-backend-monitor
+  image:
+    repository: nguyenduyanh221204/vdt-backend
+    tag: v1.0.0
+  replicas: 1
+  port: 8000
+  containerPort: 8000
+  auth:
+    secretKey: fd6bf8bfbc5b1f608d1dc7c25e1f6b92ca2490844bd3da5622177024d5f2728e
+    algorithm: HS256
+    accessTokenExpiredMinutes: 10000
+  otel:
+    otelExporterOtlpEndpoint: http://tempo.observability.svc.cluster.local:4317
+  service:
+    name: vdt-backend-svc
+    type: NodePort
+    port: 8000
+    targetPort: 8000
+    nodePort: 30000
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: 250m
+
+release:
+  name: prometheus-stack

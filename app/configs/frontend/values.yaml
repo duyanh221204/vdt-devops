@@ -1,0 +1,19 @@
+frontend:
+  name: vdt-frontend
+  monitor:
+    name: vdt-frontend-monitor
+  image:
+    repository: nguyenduyanh221204/vdt-frontend
+    tag: v1.0.0
+  replicas: 1
+  containerPort: 80
+  service:
+    name: vdt-frontend-svc
+    type: NodePort
+    port: 80
+    targetPort: 80
+    nodePort: 30001
+  resources:
+    limits:
+      memory: 64Mi
+      cpu: 100m

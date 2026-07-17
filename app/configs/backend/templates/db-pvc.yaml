@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.database.persistence.pvName }}
+  labels:
+    type: local
+spec:
+  storageClassName: {{ .Values.database.persistence.storageClassName }}
+  capacity:
+    storage: {{ .Values.database.persistence.storage }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ quote .Values.database.persistence.hostPath }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.database.persistence.pvcName }}
+spec:
+  storageClassName: {{ .Values.database.persistence.storageClassName }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.database.persistence.storage }}

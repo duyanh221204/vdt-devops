@@ -1,0 +1,22 @@
+tempo:
+  reportingEnabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /var/tempo/traces
+persistence:
+  enabled: false
+extraVolumes:
+  - name: tempo-storage
+    emptyDir: {}
+extraVolumeMounts:
+  - name: tempo-storage
+    mountPath: /var/tempo/traces

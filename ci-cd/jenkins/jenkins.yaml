@@ -1,4 +1,3 @@
-# nano jenkins.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,16 +20,11 @@ spec:
             - containerPort: 8080
           env:
             - name: JAVA_OPTS
-              value: "-Xms256m -Xmx512m" # Giới hạn tài nguyên cho Jenkins
+              value: "-Xms256m -Xmx512m"
           volumeMounts:
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
             - name: jenkins-data
               mountPath: /var/jenkins_home
-      volumes: # Mount vào ổ cứng của Worker Node
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
+      volumes:
         - name: jenkins-data
           persistentVolumeClaim:
             claimName: jenkins-pvc
@@ -48,6 +42,3 @@ spec:
       nodePort: 32000
   selector:
     app: jenkins
-
-# kubectl apply -f jenkins.yaml
-# kubectl logs -n jenkins deployment/jenkins
