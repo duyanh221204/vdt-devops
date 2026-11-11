@@ -27,34 +27,7 @@ How each signal is collected:
 
 ## Architecture
 
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false}}}%%
-flowchart LR
-    subgraph nsApp ["namespace: default"]
-        be["vdt-backend (FastAPI)"]
-    end
-    subgraph nsObs ["namespace: observability"]
-        prom["Prometheus"]
-        promtail["Promtail (DaemonSet)"]
-        loki["Loki"]
-        tempo["Tempo"]
-        ne["node-exporter"]
-        ksm["kube-state-metrics"]
-        graf["Grafana"]
-    end
-    logs["Pod log files on the node"]
-
-    prom -->|"scrape /metrics (ServiceMonitor)"| be
-    prom -->|"scrape"| ne
-    prom -->|"scrape"| ksm
-    be -->|"stdout / stderr"| logs
-    promtail -->|"tail"| logs
-    promtail -->|"push"| loki
-    be -->|"OTLP gRPC :4317"| tempo
-    graf -->|"query"| prom
-    graf -->|"query"| loki
-    graf -->|"query"| tempo
-```
+![Observability architecture](../images/4-observability-architecture.png)
 
 ## 4.1 App-of-apps
 

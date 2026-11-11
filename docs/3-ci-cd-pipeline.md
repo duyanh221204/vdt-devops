@@ -42,29 +42,7 @@ Images are never tagged `latest`. Every running Pod therefore points to an exact
 
 ## Flow
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Developer
-    participant SRC as GitHub<br/>vdt-backend / vdt-frontend
-    participant NG as ngrok
-    participant J as Jenkins
-    participant HUB as Docker Hub
-    participant CFG as GitHub<br/>vdt-*-config
-    participant A as ArgoCD
-    participant K as Kubernetes
-
-    Dev->>SRC: git push (code) + git push origin vX.Y.Z
-    SRC->>NG: webhook POST /github-webhook/ (ref: refs/tags/vX.Y.Z)
-    NG->>J: forward to 192.168.192.136:32000
-    J->>SRC: checkout the tag
-    J->>J: check tag format and that it is greater than the current tag
-    J->>HUB: docker build + push image:vX.Y.Z (Git tag = image tag)
-    J->>CFG: sed image.tag in values.yaml, commit, push
-    A->>CFG: poll, detect new commit (OutOfSync)
-    A->>K: automated sync: helm template + apply
-    K->>HUB: pull image:vX.Y.Z, rolling update
-```
+![CI/CD flow](../images/3-ci-cd-flow.png)
 
 ## 3.1 Jenkins credentials
 

@@ -12,48 +12,7 @@ The application is a **Student Management** system:
 
 ## Architecture
 
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false}}}%%
-flowchart LR
-    dev(["Developer"])
-    src[("GitHub: source repos")]
-    jenkins["Jenkins (CI)"]
-    hub[("Docker Hub")]
-    cfg[("GitHub: Helm config repos")]
-
-    dev -->|"git push + tag vX.Y.Z"| src
-    src -->|"webhook via ngrok"| jenkins
-    jenkins -->|"build and push image:vX.Y.Z"| hub
-    jenkins -->|"update image tag in values.yaml"| cfg
-
-    subgraph k8s ["Kubernetes cluster (kubeadm: 1 master + 1 worker)"]
-        argocd["ArgoCD (GitOps CD)"]
-        fe["Frontend: nginx + Vue"]
-        be["Backend: FastAPI"]
-        db[("PostgreSQL")]
-        prom["Prometheus"]
-        promtail["Promtail"]
-        loki["Loki"]
-        tempo["Tempo"]
-        grafana["Grafana"]
-
-        argocd -->|"deploy"| fe
-        argocd -->|"deploy"| be
-        fe -->|"/api proxy"| be
-        be --> db
-        prom -->|"scrape /metrics"| be
-        promtail -->|"collect logs"| be
-        promtail --> loki
-        be -->|"OTLP traces"| tempo
-        grafana --> prom
-        grafana --> loki
-        grafana --> tempo
-    end
-
-    argocd -->|"pull and sync"| cfg
-    fe -.->|"image pull"| hub
-    be -.->|"image pull"| hub
-```
+![Architecture](images/0-architecture.png)
 
 - **CI (Jenkins):** a Git tag `vX.Y.Z` on a source repo triggers a pipeline. It builds the Docker image with the **Git tag as the image tag**, pushes it to Docker Hub, and commits that tag into the matching Helm config repo.
 - **CD (ArgoCD, GitOps):** ArgoCD watches the config repos and automatically syncs the cluster to what is in Git.
