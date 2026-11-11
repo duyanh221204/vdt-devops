@@ -28,6 +28,7 @@ How each signal is collected:
 ## Architecture
 
 ```mermaid
+%%{init: {"flowchart": {"htmlLabels": false}}}%%
 flowchart LR
     subgraph nsApp ["namespace: default"]
         be["vdt-backend (FastAPI)"]

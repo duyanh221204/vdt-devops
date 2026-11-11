@@ -13,6 +13,7 @@ The application is a **Student Management** system:
 ## Architecture
 
 ```mermaid
+%%{init: {"flowchart": {"htmlLabels": false}}}%%
 flowchart LR
     dev(["Developer"])
     src[("GitHub: source repos")]
