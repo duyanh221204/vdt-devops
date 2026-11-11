@@ -1,0 +1,15 @@
+[submodule "app/src/backend"]
+	path = app/src/backend
+	url = https://github.com/duyanh221204/vdt-backend.git
+[submodule "app/src/frontend"]
+	path = app/src/frontend
+	url = https://github.com/duyanh221204/vdt-frontend.git
+[submodule "app/helm/backend"]
+	path = app/helm/backend
+	url = https://github.com/duyanh221204/vdt-backend-config.git
+[submodule "app/helm/frontend"]
+	path = app/helm/frontend
+	url = https://github.com/duyanh221204/vdt-frontend-config.git
+[submodule "cloud-observability"]
+	path = cloud-observability
+	url = https://github.com/duyanh221204/vdt-cloud-observability.git
