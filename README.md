@@ -8,7 +8,7 @@ The application is a **Student Management** system:
 |----------|------------------------------------------|-----------------------------------------------------------------------|
 | Frontend | Vue 3 + Vite, served by **nginx**        | nginx also reverse-proxies `/api/*` to the backend service            |
 | Backend  | **FastAPI** (Python 3.11), SQLAlchemy async | JWT auth (`admin` / `user` roles), CRUD on students, rate limiting |
-| Database | **PostgreSQL 15**                        | Initialised from [db.sql](https://github.com/duyanh221204/vdt-backend-config/blob/main/db.sql)                    |
+| Database | **PostgreSQL 15**                        | Initialized from [db.sql](https://github.com/duyanh221204/vdt-backend-config/blob/main/db.sql)                    |
 
 ## Architecture
 
@@ -16,7 +16,7 @@ The application is a **Student Management** system:
 
 - **CI (Jenkins):** a Git tag `vX.Y.Z` on a source repo triggers a pipeline. It builds the Docker image with the **Git tag as the image tag**, pushes it to Docker Hub, and commits that tag into the matching Helm config repo.
 - **CD (ArgoCD, GitOps):** ArgoCD watches the config repos and automatically syncs the cluster to what is in Git.
-- **Observability:** Prometheus (metrics), Loki + Promtail (logs) and Tempo + OpenTelemetry (traces), all visualised and **correlated** in Grafana.
+- **Observability:** Prometheus (metrics), Loki + Promtail (logs) and Tempo + OpenTelemetry (traces), all visualized and **correlated** in Grafana.
 
 ## Repository layout
 

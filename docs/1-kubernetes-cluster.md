@@ -87,7 +87,7 @@ sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl    # prevent unplanned upgrades
 ```
 
-## 1.2 Initialise the control plane
+## 1.2 Initialize the control plane
 
 > Run on the **master** as the normal user.
 > Script: [scripts/1-master-init.sh](../scripts/1-master-init.sh) (`./scripts/1-master-init.sh`)

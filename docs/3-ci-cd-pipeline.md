@@ -8,7 +8,7 @@ This step connects everything from step 2. A developer pushes a version tag `vX.
 
 | Part | Role |
 |------|------|
-| **CI** (Continuous Integration) | Integrate the change, build, test/analyse if any, and package a versioned **artifact** (here: a Docker image) |
+| **CI** (Continuous Integration) | Integrate the change, build, test/analyze if any, and package a versioned **artifact** (here: a Docker image) |
 | **CD** (Continuous Delivery) | Bring the artifact to a state that is ready to deploy. The final deploy is still approved or triggered by hand |
 | **CD** (Continuous Deployment) | Deploy the artifact automatically as soon as the pipeline succeeds |
 

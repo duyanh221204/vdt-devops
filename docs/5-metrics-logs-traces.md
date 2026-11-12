@@ -3,7 +3,7 @@
 This step covers what the **backend** (FastAPI) emits for each pillar and how Grafana links the three signals together. Each signal is useful alone, but the real value is in moving between them:
 
 1. **Detect** with metrics: the error rate or latency rises.
-2. **Localise** with traces: find the slow or failing request; the waterfall shows which span is the bottleneck.
+2. **Localize** with traces: find the slow or failing request; the waterfall shows which span is the bottleneck.
 3. **Explain** with logs: read the log lines of that exact request, filtered by its trace ID.
 
 The links that make this possible:

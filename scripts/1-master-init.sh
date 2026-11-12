@@ -11,7 +11,7 @@ fi
 
 echo "==> [1/4] kubeadm init (pod CIDR ${POD_CIDR})"
 if [[ -f /etc/kubernetes/admin.conf ]]; then
-  echo "    Control plane already initialised, skipping"
+  echo "    Control plane already initialized, skipping"
 else
   sudo kubeadm init --pod-network-cidr="${POD_CIDR}"
 fi

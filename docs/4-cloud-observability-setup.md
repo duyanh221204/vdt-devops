@@ -7,7 +7,7 @@ This step deploys the observability stack. It is deployed **the GitOps way**, li
 **Observability** is the ability to understand what happens inside a system from the data it produces.
 
 - **Monitoring** answers *"is the system working?"*: it watches known metrics and alerts when a threshold is crossed.
-- **Observability** answers *"why is it not working?"*: it analyses telemetry to find root causes, including for failures nobody predicted.
+- **Observability** answers *"why is it not working?"*: it analyzes telemetry to find root causes, including for failures nobody predicted.
 
 The telemetry has three pillars:
 
@@ -23,7 +23,7 @@ How each signal is collected:
 
 - **Pull-based metrics:** Prometheus periodically *scrapes* an HTTP endpoint (`/metrics`) on each target. It is simple to configure, and a target that stops answering is detected immediately as `down`.
 - **ServiceMonitor:** a CRD of the Prometheus Operator, shipped with kube-prometheus-stack. It selects Kubernetes Services by label and tells Prometheus which port and path to scrape. Adding a target therefore means adding a ServiceMonitor next to the app, with no edit to the Prometheus config.
-- **Centralised logging:** reading logs Pod by Pod does not scale. A **collector** (Promtail) ships every container's logs to a **store** (Loki). Loki indexes only labels, not the full text, which keeps it light. Grafana is the **UI**.
+- **Centralized logging:** reading logs Pod by Pod does not scale. A **collector** (Promtail) ships every container's logs to a **store** (Loki). Loki indexes only labels, not the full text, which keeps it light. Grafana is the **UI**.
 
 ## Architecture
 
