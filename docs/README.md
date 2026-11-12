@@ -32,16 +32,16 @@ Every service is exposed as a `NodePort`, so it is reachable on either node IP (
 
 | Port | Service | Defined in |
 |------|---------|------------|
-| 30000 | Backend (FastAPI — `/docs`, `/metrics`) | [app/helm/backend/values.yaml](../app/helm/backend/values.yaml) |
-| 30001 | Frontend (nginx) | [app/helm/frontend/values.yaml](../app/helm/frontend/values.yaml) |
+| 30000 | Backend (FastAPI — `/docs`, `/metrics`) | [app/helm/backend/values.yaml](https://github.com/duyanh221204/vdt-backend-config/blob/main/values.yaml) |
+| 30001 | Frontend (nginx) | [app/helm/frontend/values.yaml](https://github.com/duyanh221204/vdt-frontend-config/blob/main/values.yaml) |
 | 32000 | Jenkins | [ci-cd/jenkins/jenkins.yaml](../ci-cd/jenkins/jenkins.yaml) |
 | 32001 / 32002 | ArgoCD (HTTP / HTTPS) | [ci-cd/argocd/argoCD.yaml](../ci-cd/argocd/argoCD.yaml) |
-| 32100 | Grafana | [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) |
-| 32200 | Prometheus | [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) |
+| 32100 | Grafana | [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) |
+| 32200 | Prometheus | [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) |
 
 ## Scripts
 
-Long sequences of consecutive commands are also kept as scripts in [scripts/](../scripts). Each document shows the commands and links to the matching script.
+Long sequences of consecutive commands are also kept as scripts in [scripts/](../scripts). Each document shows the commands and links to the matching script. The repository is cloned on both nodes, and the scripts and `kubectl apply -f` commands are run from its root.
 
 | Script | Run on | Step |
 |--------|--------|------|
@@ -82,3 +82,12 @@ vdt-devops/
     ├── 2-worker-prepare.sh
     └── 2-jenkins-docker-cli.sh
 ```
+
+## Reproducing this setup
+
+The pipelines push images to the Docker Hub account `nguyenduyanh221204` and commit to the GitHub repos of `duyanh221204`, so another account needs its own copies:
+
+- Fork the six repositories (`vdt-devops` and the five submodules), point the submodule URLs in `.gitmodules` to the forks, and clone the `vdt-devops` fork on both nodes.
+- In the forks, replace `nguyenduyanh221204` with the Docker Hub account and `duyanh221204` with the GitHub account. `grep -rn duyanh221204 .` finds every place, since the string is part of both names.
+- Set `image.tag` to `v1.0.0` in both config repos. The current tags only exist on the original Docker Hub account, and the pipeline only accepts a Git tag greater than `image.tag`.
+- Use the IPs of your own VMs wherever `192.168.192.136` / `192.168.192.138` appear in the commands and URLs.

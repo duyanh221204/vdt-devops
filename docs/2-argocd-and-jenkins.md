@@ -61,10 +61,10 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 ### Expose the UI with a NodePort
 
-Create `argoCD.yaml` with the content of [ci-cd/argocd/argoCD.yaml](../ci-cd/argocd/argoCD.yaml). It redefines the `argocd-server` Service as `NodePort`, with fixed ports **32001** (HTTP) and **32002** (HTTPS). Apply it:
+[ci-cd/argocd/argoCD.yaml](../ci-cd/argocd/argoCD.yaml) redefines the `argocd-server` Service as `NodePort`, with fixed ports **32001** (HTTP) and **32002** (HTTPS). Apply it:
 
 ```bash
-kubectl apply -f argoCD.yaml
+kubectl apply -f ci-cd/argocd/argoCD.yaml
 kubectl get services -n argocd
 ```
 
@@ -102,7 +102,7 @@ docker build -t nguyenduyanh221204/vdt-frontend:v1.0.0 .
 docker push nguyenduyanh221204/vdt-frontend:v1.0.0
 ```
 
-Dockerfiles: [backend](../app/src/backend/Dockerfile) (multi-stage, `uvicorn` on port 8000) and [frontend](../app/src/frontend/Dockerfile) (Vite build, served by nginx with [nginx.conf](../app/src/frontend/nginx.conf)).
+Dockerfiles: [backend](https://github.com/duyanh221204/vdt-backend/blob/main/Dockerfile) (multi-stage, `uvicorn` on port 8000) and [frontend](https://github.com/duyanh221204/vdt-frontend/blob/main/Dockerfile) (Vite build, served by nginx with [nginx.conf](https://github.com/duyanh221204/vdt-frontend/blob/main/nginx.conf)).
 
 ### Helm config repos
 
@@ -110,10 +110,12 @@ Each app has a separate **config repo** that holds its Helm chart. ArgoCD watche
 
 | Chart | Resources | Main settings |
 |-------|-----------|---------------|
-| [vdt-backend-config](../app/helm/backend) | backend Deployment and NodePort Service; PostgreSQL Deployment and ClusterIP Service; PV/PVC (hostPath `/data/postgres_home`); ConfigMap with [db.sql](../app/helm/backend/db.sql) mounted into `/docker-entrypoint-initdb.d/`; ServiceMonitor (added in [step 4](4-cloud-observability-setup.md)) | [values.yaml](../app/helm/backend/values.yaml) |
-| [vdt-frontend-config](../app/helm/frontend) | frontend Deployment and NodePort Service | [values.yaml](../app/helm/frontend/values.yaml) |
+| [vdt-backend-config](https://github.com/duyanh221204/vdt-backend-config) | backend Deployment and NodePort Service; PostgreSQL Deployment and ClusterIP Service; PV/PVC (hostPath `/data/postgres_home`); ConfigMap with [db.sql](https://github.com/duyanh221204/vdt-backend-config/blob/main/db.sql) mounted into `/docker-entrypoint-initdb.d/`; ServiceMonitor (added in [step 4](4-cloud-observability-setup.md)) | [values.yaml](https://github.com/duyanh221204/vdt-backend-config/blob/main/values.yaml) |
+| [vdt-frontend-config](https://github.com/duyanh221204/vdt-frontend-config) | frontend Deployment and NodePort Service | [values.yaml](https://github.com/duyanh221204/vdt-frontend-config/blob/main/values.yaml) |
 
 The backend reaches the database through the `vdt-database-svc` Service. The DB credentials, JWT settings and OTLP endpoint are passed as environment variables from `values.yaml`.
+
+> **Note:** `database.password` and `backend.auth.secretKey` are stored in plain text in `values.yaml`. This is acceptable for a lab. A real setup would keep them in a Kubernetes Secret managed outside Git, for example with Sealed Secrets or External Secrets.
 
 The image version lives in one field, `image.tag`. It always holds a `vX.Y.Z` version, and from step 3 on it is updated by the CI pipeline with the release's **Git tag**, because the Git tag is used as the image tag.
 
@@ -124,11 +126,11 @@ An ArgoCD **Application** connects a Git source (repo, revision, path) to a dest
 - **`prune: true`** deletes resources that were removed from Git.
 - **`selfHeal: true`** reverts manual changes made in the cluster.
 
-Create `vdt-backend-app.yaml` and `vdt-frontend-app.yaml` with the content of [ci-cd/argocd/apps/vdt-backend-app.yaml](../ci-cd/argocd/apps/vdt-backend-app.yaml) and [ci-cd/argocd/apps/vdt-frontend-app.yaml](../ci-cd/argocd/apps/vdt-frontend-app.yaml). Both apps track `HEAD` of their config repo, path `.`, and deploy into the `default` namespace.
+The two Applications are [ci-cd/argocd/apps/vdt-backend-app.yaml](../ci-cd/argocd/apps/vdt-backend-app.yaml) and [ci-cd/argocd/apps/vdt-frontend-app.yaml](../ci-cd/argocd/apps/vdt-frontend-app.yaml). Both apps track `HEAD` of their config repo, path `.`, and deploy into the `default` namespace.
 
 ```bash
-kubectl apply -f vdt-backend-app.yaml
-kubectl apply -f vdt-frontend-app.yaml
+kubectl apply -f ci-cd/argocd/apps/vdt-backend-app.yaml
+kubectl apply -f ci-cd/argocd/apps/vdt-frontend-app.yaml
 ```
 
 Both applications become **Synced** and **Healthy**:
@@ -161,23 +163,23 @@ Jenkins runs as a Deployment in its own namespace. Its home directory (`/var/jen
 kubectl create namespace jenkins
 ```
 
-Create `jenkins-pvc.yaml` with the content of [ci-cd/jenkins/jenkins-pvc.yaml](../ci-cd/jenkins/jenkins-pvc.yaml):
+[ci-cd/jenkins/jenkins-pvc.yaml](../ci-cd/jenkins/jenkins-pvc.yaml) defines:
 
 - a 10 Gi **PersistentVolume** backed by hostPath `/data/jenkins_home` (`storageClassName: manual`)
 - a **PersistentVolumeClaim** `jenkins-pvc` in the `jenkins` namespace that binds to it
 
 ```bash
-kubectl apply -f jenkins-pvc.yaml
+kubectl apply -f ci-cd/jenkins/jenkins-pvc.yaml
 ```
 
-Create `jenkins.yaml` with the content of [ci-cd/jenkins/jenkins.yaml](../ci-cd/jenkins/jenkins.yaml):
+[ci-cd/jenkins/jenkins.yaml](../ci-cd/jenkins/jenkins.yaml) defines:
 
 - **Deployment** `jenkins/jenkins:lts`, with `JAVA_OPTS="-Xms256m -Xmx512m"`. This caps the JVM heap at 512 MB so Jenkins cannot use up the worker's RAM.
 - Mounts `jenkins-pvc` on `/var/jenkins_home`, and the worker's `/var/run/docker.sock` on the same path (used in [2.5](#25-let-jenkins-build-docker-images)).
 - **Service** `NodePort` **32000**.
 
 ```bash
-kubectl apply -f jenkins.yaml
+kubectl apply -f ci-cd/jenkins/jenkins.yaml
 kubectl get services -n jenkins
 ```
 
@@ -218,7 +220,7 @@ The dashboard is empty until the pipeline jobs are created in [step 3](3-ci-cd-p
 The `docker.sock` mount only gives Jenkins a channel to the worker's Docker Engine. Jenkins still needs the `docker` **CLI**. The static binary is downloaded into `/var/jenkins_home`. Because that folder is on the PVC, the binary survives restarts, and the pipelines call it through `DOCKER_PATH = '/var/jenkins_home/docker'`.
 
 > Run on the **master**.
-> Script: [scripts/2-jenkins-docker-cli.sh](../scripts/2-jenkins-docker-cli.sh)
+> Script: [scripts/2-jenkins-docker-cli.sh](../scripts/2-jenkins-docker-cli.sh) (`./scripts/2-jenkins-docker-cli.sh`)
 
 ```bash
 kubectl exec -it deployment/jenkins -n jenkins -- /bin/bash

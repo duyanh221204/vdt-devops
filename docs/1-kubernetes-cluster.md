@@ -90,7 +90,7 @@ sudo apt-mark hold kubelet kubeadm kubectl    # prevent unplanned upgrades
 ## 1.2 Initialise the control plane
 
 > Run on the **master** as the normal user.
-> Script: [scripts/1-master-init.sh](../scripts/1-master-init.sh)
+> Script: [scripts/1-master-init.sh](../scripts/1-master-init.sh) (`./scripts/1-master-init.sh`)
 
 ```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16

@@ -10,24 +10,23 @@ The links that make this possible:
 
 | From → To | Mechanism | Configured in |
 |-----------|-----------|---------------|
-| Trace → Logs | `trace_id` written into every log line + Tempo datasource `tracesToLogsV2` | [telemetry.py](../app/src/backend/configuration/telemetry.py), [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) |
-| Logs → Trace | Loki datasource `derivedFields` (regex on `trace_id=`) | [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) |
-| Metric → Trace | **Exemplars** (`trace_id` attached to metric samples) | [metrics_middleware.py](../app/src/backend/configuration/metrics_middleware.py), [main.py](../app/src/backend/main.py), [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) |
+| Trace → Logs | `trace_id` written into every log line + Tempo datasource `tracesToLogsV2` | [telemetry.py](https://github.com/duyanh221204/vdt-backend/blob/main/configuration/telemetry.py), [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) |
+| Logs → Trace | Loki datasource `derivedFields` (regex on `trace_id=`) | [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) |
+| Metric → Trace | **Exemplars** (`trace_id` attached to metric samples) | [metrics_middleware.py](https://github.com/duyanh221204/vdt-backend/blob/main/configuration/metrics_middleware.py), [main.py](https://github.com/duyanh221204/vdt-backend/blob/main/main.py), [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) |
 
-Python libraries used (from [requirements.txt](../app/src/backend/requirements.txt)):
+Python libraries used (from [requirements.txt](https://github.com/duyanh221204/vdt-backend/blob/main/requirements.txt)):
 
 - `prometheus_client`
 - `opentelemetry-api` and `opentelemetry-sdk`
 - `opentelemetry-exporter-otlp`
 - `opentelemetry-instrumentation-fastapi`
 - `opentelemetry-instrumentation-sqlalchemy`
-- `slowapi`, for rate limiting
 
 ## 5.1 Metrics
 
 ### Instrumentation
 
-A Starlette middleware, [configuration/metrics_middleware.py](../app/src/backend/configuration/metrics_middleware.py), records two metrics for every request except `/metrics` itself:
+A Starlette middleware, [configuration/metrics_middleware.py](https://github.com/duyanh221204/vdt-backend/blob/main/configuration/metrics_middleware.py), records two metrics for every request except `/metrics` itself:
 
 | Metric | Type | Labels |
 |--------|------|--------|
@@ -78,7 +77,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 
 The middleware labels requests by **route template** (`route.path`), not by the raw URL. Otherwise `/api/students/1`, `/api/students/2`, … would each create a new time series (a *cardinality explosion*).
 
-The middleware is registered in [main.py](../app/src/backend/main.py) (`app.add_middleware(MetricsMiddleware)`), which also serves the `/metrics` endpoint:
+The middleware is registered in [main.py](https://github.com/duyanh221204/vdt-backend/blob/main/main.py) (`app.add_middleware(MetricsMiddleware)`), which also serves the `/metrics` endpoint:
 
 ```python
 @app.get('/metrics', tags=['Metrics'])
@@ -128,7 +127,7 @@ kube-prometheus-stack also runs **node-exporter** on every node. It reads CPU, m
 
 ### Log format
 
-The app logs to stdout and stderr. The root logger is configured in [configuration/telemetry.py](../app/src/backend/configuration/telemetry.py) with a format that includes the **current trace and span IDs**. A `logging.Filter` reads the active OpenTelemetry span and adds its IDs to every record:
+The app logs to stdout and stderr. The root logger is configured in [configuration/telemetry.py](https://github.com/duyanh221204/vdt-backend/blob/main/configuration/telemetry.py) with a format that includes the **current trace and span IDs**. A `logging.Filter` reads the active OpenTelemetry span and adds its IDs to every record:
 
 ```python
 class TraceContextFilter(logging.Filter):
@@ -171,7 +170,7 @@ else:
 root_logger.setLevel(logging.INFO)
 ```
 
-uvicorn's own access log is disabled (`--no-access-log` in the [Dockerfile](../app/src/backend/Dockerfile)). The metrics middleware writes an access line instead. That line runs inside the request, so it carries the trace context:
+uvicorn's own access log is disabled (`--no-access-log` in the [Dockerfile](https://github.com/duyanh221204/vdt-backend/blob/main/Dockerfile)). The metrics middleware writes an access line instead. That line runs inside the request, so it carries the trace context:
 
 ```python
 logger.info(
@@ -225,7 +224,7 @@ sum(count_over_time({app="vdt-backend"} |~ "status=5\\d\\d" [1m]))
 
 ### Instrumentation
 
-[configuration/telemetry.py](../app/src/backend/configuration/telemetry.py):
+[configuration/telemetry.py](https://github.com/duyanh221204/vdt-backend/blob/main/configuration/telemetry.py):
 
 ```python
 OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv('OTEL_EXPORTER_OTLP_ENDPOINT')   # http://tempo.observability...:4317
@@ -250,7 +249,7 @@ def instrument_app(app: FastAPI):
     FastAPIInstrumentor().instrument_app(app)                     # one server span per HTTP request
 ```
 
-[main.py](../app/src/backend/main.py) calls both before the app serves traffic:
+[main.py](https://github.com/duyanh221204/vdt-backend/blob/main/main.py) calls both before the app serves traffic:
 
 ```python
 configure_tracing()
@@ -286,7 +285,7 @@ Trace of a failed login (`401`), showing the database spans:
 
 Sections 5.1–5.3 set up each signal on its own. The next two sections connect them, following the links listed at the [top of this page](#5-metrics-logs-traces-and-their-correlation).
 
-The logs already contain `trace_id=<32 hex>` ([5.2](#log-format)). The rest is Grafana datasource configuration. It is provisioned through `grafana.additionalDataSources` in [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml), so it is versioned in Git and synced by ArgoCD rather than clicked together in the UI.
+The logs already contain `trace_id=<32 hex>` ([5.2](#log-format)). The rest is Grafana datasource configuration. It is provisioned through `grafana.additionalDataSources` in [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml), so it is versioned in Git and synced by ArgoCD rather than clicked together in the UI.
 
 ### Trace → Logs (`tracesToLogsV2` on the Tempo datasource)
 
@@ -365,7 +364,7 @@ curl -s -H "Accept: application/openmetrics-text" http://192.168.192.136:30000/m
 
 ![OpenMetrics with exemplars](../images/5-openmetrics-exemplars.png)
 
-**3. Prometheus stores exemplars.** Exemplar storage is a feature flag, enabled in [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml):
+**3. Prometheus stores exemplars.** Exemplar storage is a feature flag, enabled in [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml):
 
 ```yaml
 prometheus:
@@ -409,9 +408,3 @@ sum by (job, exported_endpoint, status_code) (rate(http_requests_total[10m]))
    ![Logs from the trace](../images/5-exemplar-trace-logs.png)
 
 From a single spike on a metric graph, the exact request and its logs are reached in two clicks.
-
-## 5.7 Future work
-
-- Add code quality and security analysis to the pipeline (e.g. SonarQube).
-- Collect metrics, logs and traces through one **OpenTelemetry Collector** instead of separate agents.
-- Combine CI/CD with observability, for example by annotating Grafana dashboards with deployments, or by gating or rolling back releases on error rate.

@@ -139,8 +139,8 @@ Both jobs on the Jenkins dashboard:
 
 The pipeline is defined in each source repo:
 
-- [app/src/backend/Jenkinsfile](../app/src/backend/Jenkinsfile)
-- [app/src/frontend/Jenkinsfile](../app/src/frontend/Jenkinsfile)
+- [app/src/backend/Jenkinsfile](https://github.com/duyanh221204/vdt-backend/blob/main/Jenkinsfile)
+- [app/src/frontend/Jenkinsfile](https://github.com/duyanh221204/vdt-frontend/blob/main/Jenkinsfile)
 
 The two files are identical except for `DOCKER_IMAGE` and `CONFIG_REPO_URL`.
 

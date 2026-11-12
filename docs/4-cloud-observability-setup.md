@@ -1,6 +1,6 @@
 # 4. Cloud Observability Setup
 
-This step deploys the observability stack. It is deployed **the GitOps way**, like the applications: Helm charts are referenced by ArgoCD Applications that live in Git, in the [cloud-observability](../cloud-observability) repo. Step 5 describes what is collected from the backend and how the signals are linked.
+This step deploys the observability stack. It is deployed **the GitOps way**, like the applications: Helm charts are referenced by ArgoCD Applications that live in Git, in the [cloud-observability](https://github.com/duyanh221204/vdt-cloud-observability) repo. Step 5 describes what is collected from the backend and how the signals are linked.
 
 ## Concepts
 
@@ -33,7 +33,7 @@ How each signal is collected:
 
 The stack follows the ArgoCD **app-of-apps** pattern:
 
-- One parent Application, [root-app.yaml](../cloud-observability/root-app.yaml), points to the [applications/](../cloud-observability/applications) folder.
+- One parent Application, [root-app.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/root-app.yaml), points to the [applications/](https://github.com/duyanh221204/vdt-cloud-observability/tree/main/applications) folder.
 - That folder contains one child Application per component.
 - Applying the parent once is enough. Any later change to a child app or its values in Git is synced automatically.
 
@@ -76,18 +76,18 @@ spec:
 
 | Application | Chart (version) | Values | Purpose |
 |-------------|-----------------|--------|---------|
-| [prometheus-stack](../cloud-observability/applications/prometheus-stack-app.yaml) | `kube-prometheus-stack` (58.2.2) | [prometheus-stack-values.yaml](../cloud-observability/values/prometheus-stack-values.yaml) | Prometheus Operator, Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
-| [loki](../cloud-observability/applications/loki-app.yaml) | `loki` (6.55.0) | [loki-values.yaml](../cloud-observability/values/loki-values.yaml) | Log store |
-| [promtail](../cloud-observability/applications/promtail-app.yaml) | `promtail` (6.15.5) | [promtail-values.yaml](../cloud-observability/values/promtail-values.yaml) | Log collector (DaemonSet) |
-| [tempo](../cloud-observability/applications/tempo-app.yaml) | `tempo` (1.24.4) | [tempo-values.yaml](../cloud-observability/values/tempo-values.yaml) | Trace store, OTLP receiver |
+| [prometheus-stack](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/applications/prometheus-stack-app.yaml) | `kube-prometheus-stack` (58.2.2) | [prometheus-stack-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml) | Prometheus Operator, Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
+| [loki](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/applications/loki-app.yaml) | `loki` (6.55.0) | [loki-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/loki-values.yaml) | Log store |
+| [promtail](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/applications/promtail-app.yaml) | `promtail` (6.15.5) | [promtail-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/promtail-values.yaml) | Log collector (DaemonSet) |
+| [tempo](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/applications/tempo-app.yaml) | `tempo` (1.24.4) | [tempo-values.yaml](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/tempo-values.yaml) | Trace store, OTLP receiver |
 
-The [prometheus-stack](../cloud-observability/applications/prometheus-stack-app.yaml) app also sets `ServerSideApply=true`, because the Prometheus Operator CRDs are too large for a client-side apply.
+The [prometheus-stack](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/applications/prometheus-stack-app.yaml) app also sets `ServerSideApply=true`, because the Prometheus Operator CRDs are too large for a client-side apply.
 
 ## 4.2 Values: sized for a small worker
 
 The worker has 5 GB of RAM and also runs the apps, ArgoCD and Jenkins. All values files therefore set small `requests` and `limits` and keep components to a minimum:
 
-- **Prometheus** ([values](../cloud-observability/values/prometheus-stack-values.yaml)):
+- **Prometheus** ([values](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/prometheus-stack-values.yaml)):
   - `retention: 2d`, `scrapeInterval: 30s`
   - NodePort **32200**
   - `serviceMonitorSelectorNilUsesHelmValues: false` and `serviceMonitorNamespaceSelectorNilUsesHelmValues: false`, so Prometheus picks up ServiceMonitors from **any** namespace and with any labels, not only those of its own Helm release
@@ -111,12 +111,12 @@ The worker has 5 GB of RAM and also runs the apps, ArgoCD and Jenkins. All value
   - NodePort **32100**, admin password `admin`
   - Tempo and Loki added as extra datasources with fixed UIDs (`tempo`, `loki`), so the correlation links can refer to each other. The Prometheus datasource is created by the chart itself.
   - The datasource YAML is explained in [step 5](5-metrics-logs-traces.md).
-- **Loki** ([values](../cloud-observability/values/loki-values.yaml)):
+- **Loki** ([values](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/loki-values.yaml)):
   - `deploymentMode: SingleBinary`, one Pod for all Loki roles
   - all scalable components set to `replicas: 0`, with gateway, caches, canary, self-monitoring and tests disabled
   - `filesystem` storage on an `emptyDir`, with `auth_enabled: false`
-- **Promtail** ([values](../cloud-observability/values/promtail-values.yaml)): pushes to `http://loki.observability.svc.cluster.local:3100/loki/api/v1/push`.
-- **Tempo** ([values](../cloud-observability/values/tempo-values.yaml)): `local` trace storage on an `emptyDir`. The chart's default receivers include OTLP gRPC on **4317**.
+- **Promtail** ([values](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/promtail-values.yaml)): pushes to `http://loki.observability.svc.cluster.local:3100/loki/api/v1/push`.
+- **Tempo** ([values](https://github.com/duyanh221204/vdt-cloud-observability/blob/main/values/tempo-values.yaml)): `local` trace storage on an `emptyDir`. The chart's default receivers include OTLP gRPC on **4317**.
 
 > Loki and Tempo keep their data on `emptyDir` volumes, so logs and traces are lost when those Pods restart. This is acceptable for the lab; persistent volumes or object storage would be used otherwise.
 
@@ -142,9 +142,9 @@ kubectl get pods -n observability
 
 ## 4.4 Hook the backend into the stack
 
-Only the **backend** is instrumented. Two settings in its Helm chart ([app/helm/backend](../app/helm/backend)) connect it to the stack.
+Only the **backend** is instrumented. Two settings in its Helm chart ([app/helm/backend](https://github.com/duyanh221204/vdt-backend-config)) connect it to the stack.
 
-**1. ServiceMonitor:** [backend-servicemonitor.yaml](../app/helm/backend/templates/backend-servicemonitor.yaml). It selects the `vdt-backend-svc` Service by its `app` label and scrapes the Service port named `http` at `/metrics` every 15 s:
+**1. ServiceMonitor:** [backend-servicemonitor.yaml](https://github.com/duyanh221204/vdt-backend-config/blob/main/templates/backend-servicemonitor.yaml). It selects the `vdt-backend-svc` Service by its `app` label and scrapes the Service port named `http` at `/metrics` every 15 s:
 
 ```yaml
 apiVersion: monitoring.coreos.com/v1
@@ -167,7 +167,7 @@ spec:
 - The `release: prometheus-stack` label is the label Prometheus selects on by default. Here the selectors are opened up by the values above, so the label is kept only for compatibility.
 - The ServiceMonitor CRD comes from kube-prometheus-stack. The backend app can only sync this resource after step 4.3.
 
-**2. OTLP endpoint:** passed to the backend as an environment variable from [values.yaml](../app/helm/backend/values.yaml):
+**2. OTLP endpoint:** passed to the backend as an environment variable from [values.yaml](https://github.com/duyanh221204/vdt-backend-config/blob/main/values.yaml):
 
 ```yaml
 backend:
